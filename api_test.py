@@ -9,3 +9,5 @@ soup = BeautifulSoup(r, 'html.parser')
 
 
 print(soup.find(lambda tag:tag.name=='b' and "ZAWODNICY" in tag.text).parent)
+
+print(soup.find('div'))
