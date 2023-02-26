@@ -1,15 +1,14 @@
-import requests
-from bs4 import BeautifulSoup
+from api import get_first_finding
 
-
-
-r = requests.post('http://www.90minut.pl/szukaj.php', {'tekst':'Cristian Omar', 'submit': 'SZUKAJ'}).text
-
-soup = BeautifulSoup(r, 'html.parser')
-
-
-print(soup.find(lambda tag:tag.name=='b' and "ZAWODNICY" in tag.text).parent)
-
-soup = soup.find('td', {'class': 'main', 'width': '628', 'valign': 'top', 'bgcolor': '#FFFFFF', 'align': 'center'})
-results = soup.find_all('td')[1::2]
-print(results)
+def test_get_first_finding():
+    cristian = get_first_finding('Cristian Omar Diaz')
+    assert cristian['link'] == "/kariera.php?id=17454"
+    assert cristian['name'] == 'Cristián Omar (Cristián)'
+    assert cristian['birthplace'] == ' San Miguel de Tucumán'
+    assert cristian['position']
+    assert cristian.position == 'napastnik'
+    assert cristian.goals == '15'
+    assert cristian.games == '52'
+    assert cristian.birthdate == '3 listopada 1986'
+    assert cristian.height == '183'
+    assert cristian.first_club == 'Club Gimnasia y Esgrima de Concepción del Uruguay'
