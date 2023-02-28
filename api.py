@@ -26,5 +26,8 @@ def parse_player(id):
     player_dict = AttrDict()
     player_dict.link = KARIERA + id
     player_dict.name = soup.find('td', string="Imię").next_sibling.text
-    
+    player_dict.surname = soup.find('td', string="Nazwisko").next_sibling.text
+    player_dict.birthplace = soup.find('td', string="Miejsce urodzenia").next_sibling.text
+    player_dict.position = soup.find('td', string="Pozycja").next_sibling.text
+
     return player_dict
