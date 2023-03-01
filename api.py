@@ -29,5 +29,10 @@ def parse_player(id):
     player_dict.surname = soup.find('td', string="Nazwisko").next_sibling.text
     player_dict.birthplace = soup.find('td', string="Miejsce urodzenia").next_sibling.text
     player_dict.position = soup.find('td', string="Pozycja").next_sibling.text
-
+    matches_goals = soup.find('td', string='liga polska').parent.find_all('td')
+    player_dict.goals = matches_goals[-2].text
+    player_dict.games = matches_goals[-3].text
+    player_dict.birthdate = soup.find('td', string="Data urodzenia").next_sibling.text
+    player_dict.height = soup.find('td', string="Wzrost / waga").next_sibling.text
+    
     return player_dict
