@@ -30,7 +30,7 @@ def test_get_first_finding():
     assert cristian.goals == '15'
     assert cristian.games == '52'
     assert cristian.birthdate == '3 listopada 1986'
-    assert cristian.height == '183'
+    assert cristian.height == '183 cm / 79 kg'
     assert cristian.first_club == 'Club Gimnasia y Esgrima de Concepción del Uruguay'
 
 def test_parse_player():
