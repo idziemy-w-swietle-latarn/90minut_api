@@ -41,6 +41,23 @@ def parse_player(id):
         season_dict = AttrDict()
         season = season.find_all('td')
         season_dict.season = season[0].text
-        player_dict.seasons.append(season)
+        if season[0].a:
+            season_dict.link = season[0].a.get('href')
+        else:
+            season_dict.link = ''
+        if season[1].text == '-':
+            season_dict.country = ''
+            season_dict.club = ''
+            season_dict.link_club = ''
+        else:
+            season_dict.club = season[1].a.text
+            season_dict.country = season[1].img['title']
+            season_dict.link_club = season[1].a['href']
+        season_dict.matches = season[2].text
+        season_dict.goals = season[3].text
+        season_dict.trophies = season[4].text.split('\n')
+        
+        player_dict.seasons.append(season_dict)
+        
     
     return player_dict
