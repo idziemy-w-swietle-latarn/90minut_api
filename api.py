@@ -13,7 +13,7 @@ def get_page_soup(link):
     html_text = requests.get(link).text
     return BeautifulSoup(html_text, 'html.parser')
 
-def search_results(search_phrase):
+def search_results(search_phrase, search_mode = 'szukaj'):
     pass
 
 def get_first_finding(search_phrase):
@@ -34,5 +34,13 @@ def parse_player(id):
     player_dict.games = matches_goals[-3].text
     player_dict.birthdate = soup.find('td', string="Data urodzenia").next_sibling.text[0:-8].strip()
     player_dict.height = soup.find('td', string="Wzrost / waga").next_sibling.text.split('/')[0].strip()
+    seasons = soup.find('div', {'id': '90minut_kariera_zawodnika_belka'})
+    seasons = seasons.parent.table.find_all('tr')[1:-1]
+    player_dict.seasons = []
+    for season in seasons:
+        season_dict = AttrDict()
+        season = season.find_all('td')
+        season_dict.season = season[0].text
+        player_dict.seasons.append(season)
     
     return player_dict

@@ -1,4 +1,4 @@
-from api import get_first_finding, parse_player
+from api import get_first_finding, parse_player, search_results
 from api import AttrDict
 import pytest
 
@@ -33,8 +33,8 @@ cristian = AttrDict({
 
 @pytest.mark.xfail
 def test_get_first_finding():
-    cristian = get_first_finding('Cristian Omar Diaz')
-    assert cristian == cristian_fxt
+    cristian2 = get_first_finding('Cristian Omar Diaz')
+    assert cristian == cristian2
 
 def test_parse_player():
     cristian = parse_player('17454')
@@ -47,3 +47,8 @@ def test_parse_player():
     assert cristian.games == '52'
     assert cristian.birthdate == '3 listopada 1986'
     assert cristian.height == '183 cm'
+    assert len(cristian.seasons) == 15
+    assert len(cristian.seasons[0]) == 6
+    
+def test_search_results():
+    result = search_results('Cristian Omar Diaz')
