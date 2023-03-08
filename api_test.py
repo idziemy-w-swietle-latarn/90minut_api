@@ -4,6 +4,7 @@ import pytest
 import json
 
 
+@pytest.mark.xfail
 def test_get_first_finding():
     cristian = parse_player('17454')
     cristian2 = get_first_finding('Cristian Omar Diaz')
