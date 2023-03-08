@@ -13,12 +13,36 @@ def get_page_soup(link):
     html_text = requests.get(link).text
     return BeautifulSoup(html_text, 'html.parser')
 
-def search_results(search_phrase, search_mode = 'szukaj'):
-    pass
-
+def search(search_phrase, search_mode = 'szukaj'):
+    html_text = requests.post('http://www.90minut.pl/szukaj.php', 
+                              {'tekst': search_phrase, 'submit': search_mode}).text
+    soup = BeautifulSoup(html_text, 'html.parser')
+    soup = soup.find('td', {'class': 'main', 'width': '628', 
+                            'valign': 'top', 'bgcolor':'#FFFFFF', 'align':'center'})
+    soup = soup.find_all('div')
+    results_dict = {}
+    for div in soup:
+        key = div.b.text.strip()
+        results_dict[key] = {}
+        div = div.next_sibling.next_sibling.find_all('tr')
+        if key == 'ZAWODNICY':
+            for tr in div:
+                base = tr.find_all('td')[1]
+                player_name = base.text.strip()
+                player_link = base.a['href']
+                results_dict[key][player_name] = player_link
+        elif key == 'KLUBY':
+            pass
+        elif key == 'SĘDZIOWIE':
+            pass
+        
+    return results_dict
+    
+    
 def get_first_finding(search_phrase):
-    link = search_results(search_phrase)[0].link
-    soup = get_page_soup(link)
+    # link = search(search_phrase)[0].link
+    # soup = get_page_soup(link)
+    pass
     
 def parse_player(id):
     link = BASE_LINK + KARIERA + id

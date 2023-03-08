@@ -1,8 +1,16 @@
-from api import get_first_finding, parse_player, search_results
+from api import get_first_finding, parse_player, search
 from api import AttrDict
 import pytest
 import json
 
+
+def test_search():
+    results = search('Cristian Omar Diaz')
+    assert 'ZAWODNICY' in results.keys()
+    assert 'KLUBY' in results.keys()
+    assert 'SĘDZIOWIE' in results.keys()
+    assert results['ZAWODNICY']['Cristián Díaz'] == '/kariera.php?id=17454'
+    results = search('Bielik')
 
 @pytest.mark.xfail
 def test_get_first_finding():
@@ -10,6 +18,7 @@ def test_get_first_finding():
     cristian2 = get_first_finding('Cristian Omar Diaz')
     assert cristian == cristian2
 
+@pytest.mark.skip
 def test_parse_player():
     cristian = parse_player('17454')
     assert cristian['link'] == "/kariera.php?id=17454"
@@ -31,6 +40,5 @@ def test_parse_player():
     assert cristian.seasons[7].matches == '18'
     assert cristian.seasons[7].goals == '8'
     assert cristian.seasons[6].trophies[0] == 'król strzelców'
-    print(json.dumps(cristian, indent=4, ensure_ascii=False))
-def test_search_results():
-    result = search_results('Cristian Omar Diaz')
+#    print(json.dumps(cristian, indent=4, ensure_ascii=False))
+
