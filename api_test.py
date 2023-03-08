@@ -4,36 +4,8 @@ import pytest
 import json
 
 
-
-@pytest.fixture
-def cristian_fxt():
-    cristian = AttrDict({
-    'link': "/kariera.php?id=17454",
-    'birthplace': ' San Miguel de Tucumán',
-    'name': 'Cristián Omar (Cristián)',
-    'position': 'napastnik',
-    'goals' : '15',
-    'games' : '52',
-    'birthdate' : '3 listopada 1986',
-    'height' : '183',
-    'first_club' : 'Club Gimnasia y Esgrima de Concepción del Uruguay'
-})
-    return cristian
-
-cristian = AttrDict({
-    'link': "/kariera.php?id=17454",
-    'birthplace': ' San Miguel de Tucumán',
-    'name': 'Cristián Omar (Cristián)',
-    'position': 'napastnik',
-    'goals' : '15',
-    'games' : '52',
-    'birthdate' : '3 listopada 1986',
-    'height' : '183',
-    'first_club' : 'Club Gimnasia y Esgrima de Concepción del Uruguay'
-})
-
-@pytest.mark.xfail
 def test_get_first_finding():
+    cristian = parse_player('17454')
     cristian2 = get_first_finding('Cristian Omar Diaz')
     assert cristian == cristian2
 
@@ -49,7 +21,7 @@ def test_parse_player():
     assert cristian.birthdate == '3 listopada 1986'
     assert cristian.height == '183 cm'
     assert len(cristian.seasons) == 15
-#    assert len(cristian.seasons[0]) == 6
+    assert len(cristian.seasons[0]) == 8
     assert cristian.seasons[0].season == '2005/06'
     assert cristian.seasons[7].link == '/wystepy.php?id=17454&id_sezon=77'
     assert cristian.seasons[0].country == 'Argentyna'

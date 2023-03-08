@@ -59,5 +59,4 @@ def parse_player(id):
         
         player_dict.seasons.append(season_dict)
         
-    
     return player_dict
