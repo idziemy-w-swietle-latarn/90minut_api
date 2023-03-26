@@ -3,19 +3,43 @@ from bs4 import BeautifulSoup
 
 BASE_LINK = 'http://www.90minut.pl'
 KARIERA = '/kariera.php?id='
+headers = {
+'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36',
+}
 
 class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
 
+
 def get_page_soup(link):
-    html_text = requests.get(link).text
+    html_text = requests.get(link, headers=headers).text
     return BeautifulSoup(html_text, 'html.parser')
 
+def get_player_season(player_id, season_id):
+    link = 'http://www.90minut.pl/wystepy.php?id={}&id_sezon={}'.format(player_id, season_id)
+    soup = get_page_soup(link)
+    player_dict = AttrDict()
+    player_dict.link = link
+    player_dict.season = soup.find("div", {'id': '90minut_kariera_zawodnika_belka'}).next_sibling.next_sibling
+    player_dict.season = player_dict.season.p.b.text.split()[-1].strip()
+    tables = soup.find_all('table', {'class':"main", 'width':'800', 'border':'0'})
+    player_dict.games = tables[1].find_all('tr', recursive=False)[1:]
+    for n, game in enumerate(player_dict.games):
+        base = game
+        game = AttrDict()
+        game.date = base.td.nobr.text.split()[0].strip()
+        game.hour = base.td.nobr.text.split()[1].strip()
+        game.competition = base.td.next_sibling.text
+        
+        player_dict.games[n] = game
+
+    return player_dict
+    
 def search(search_phrase, search_mode = 'szukaj'):
     html_text = requests.post('http://www.90minut.pl/szukaj.php', 
-                              {'tekst': search_phrase, 'submit': search_mode}).text
+                              {'tekst': search_phrase, 'submit': search_mode}, headers=headers).text
     soup = BeautifulSoup(html_text, 'html.parser')
     soup = soup.find('td', {'class': 'main', 'width': '628', 
                             'valign': 'top', 'bgcolor':'#FFFFFF', 'align':'center'})

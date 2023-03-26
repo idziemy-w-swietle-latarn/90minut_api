@@ -1,9 +1,19 @@
-from api import get_first_finding, parse_player, search
+from api import get_first_finding, parse_player, search, get_player_season
 from api import AttrDict
 import pytest
 import json
 
+def test_player_season():
+    results = get_player_season('17454', '81')
+    assert results.link == 'http://www.90minut.pl/wystepy.php?id=17454&id_sezon=81'
+    assert results.season == '2012/13'
+    assert len(results.games) == 20
+    game0 = results.games[0]
+    assert results.games[0].date == '2012-07-18'
+    assert results.games[0].hour == '20:45'
+    assert results.games[0].competition == 'LM, II runda eliminacyjna - I mecz'
 
+@pytest.mark.skip
 def test_search():
     results = search('Cristian Omar Diaz')
     assert 'ZAWODNICY' in results.keys()
@@ -12,7 +22,7 @@ def test_search():
     assert results['ZAWODNICY']['Cristián Díaz'] == '/kariera.php?id=17454'
     results = search('Bielik')
 
-@pytest.mark.xfail
+@pytest.mark.skip
 def test_get_first_finding():
     cristian = parse_player('17454')
     cristian2 = get_first_finding('Cristian Omar Diaz')
@@ -41,4 +51,5 @@ def test_parse_player():
     assert cristian.seasons[7].goals == '8'
     assert cristian.seasons[6].trophies[0] == 'król strzelców'
 #    print(json.dumps(cristian, indent=4, ensure_ascii=False))
+
 
