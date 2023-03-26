@@ -32,6 +32,11 @@ def get_player_season(player_id, season_id):
         game.date = base.td.nobr.text.split()[0].strip()
         game.hour = base.td.nobr.text.split()[1].strip()
         game.competition = base.td.next_sibling.text
+        game.host = base.td.next_sibling.next_sibling.text.strip()
+        game.result = base.find_all('td')[3].a.b.text.strip()
+        game.guest = base.find_all('td')[4].text.strip()
+        game.number = base.find_all('td')[5].text.strip()
+        game.play_time = base.find_all('td')[6].text.strip()
         
         player_dict.games[n] = game
 

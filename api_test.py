@@ -12,6 +12,11 @@ def test_player_season():
     assert results.games[0].date == '2012-07-18'
     assert results.games[0].hour == '20:45'
     assert results.games[0].competition == 'LM, II runda eliminacyjna - I mecz'
+    assert game0.host == 'FK Budućnost (Podgorica)'
+    assert game0.result == '0-2'
+    assert game0.guest == 'Śląsk Wrocław'
+    assert game0.number == '21'
+    assert game0.play_time == '82-90'
 
 @pytest.mark.skip
 def test_search():
