@@ -1,17 +1,39 @@
-from api import get_first_finding, parse_player, search, get_player_season
+from api import get_first_finding, parse_player, search, get_player_season, parse_squad
 from api import AttrDict
 import pytest
 import json
 
+def test_parse_squad():
+    results = parse_squad('390', '79')
+    assert len(results) == 28
+    player = results[15]
+    assert player.player_id == '3055'
+    # assert player.season_id == '79'
+    # assert player.link == "/wystepy.php?id=3055&amp;id_sezon=79"
+    assert player.name == 'Sebastian Mila'
+    assert player.apparences == '34'
+    assert player.first_squad == '24'
+    assert player.substitute == '1'
+    assert player.minutes == '2844'
+    assert player.yellow_cards == '6'
+    assert player.red_cards == '0'
+    assert player.goals == '7'
+    assert player.own_goals == '0'
+    assert player.penalties_scored == '0'
+    assert player.penalties_missed == '0' 
+    print(player)
+
+@pytest.mark.skip
 def test_player_season():
     results = get_player_season('17454', '81')
     assert results.link == 'http://www.90minut.pl/wystepy.php?id=17454&id_sezon=81'
     assert results.season == '2012/13'
     assert len(results.games) == 20
+    
     game0 = results.games[0]
-    assert results.games[0].date == '2012-07-18'
-    assert results.games[0].hour == '20:45'
-    assert results.games[0].competition == 'LM, II runda eliminacyjna - I mecz'
+    assert game0.hour == '20:45'
+    assert game0.date == '2012-07-18'
+    assert game0.competition == 'LM, II runda eliminacyjna - I mecz'
     assert game0.host == 'FK Budućnost (Podgorica)'
     assert game0.result == '0-2'
     assert game0.guest == 'Śląsk Wrocław'

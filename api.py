@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 BASE_LINK = 'http://www.90minut.pl'
 KARIERA = '/kariera.php?id='
@@ -16,6 +17,37 @@ class AttrDict(dict):
 def get_page_soup(link):
     html_text = requests.get(link, headers=headers).text
     return BeautifulSoup(html_text, 'html.parser')
+
+def parse_squad(club_id, season_id):
+    link = 'http://www.90minut.pl/bilans.php?id_klub={}&id_sezon={}'.format(club_id, season_id)
+    soup = get_page_soup(link)
+    squad = soup.find('table', {'class':'main', 'width':'600', 'cellspacing':'0'})
+    squad = squad.find_all('tr', recursive=False)[3:-2]
+    for n, player in enumerate(squad):
+        base = player.find_all('td')
+        player = AttrDict()
+        player.player_id = base[0].a['href']        
+        try:
+            player.player_id = re.search('id=(.+?)&', player.player_id).group(1)
+        except AttributeError:
+        #print, console.log, assert
+            pass
+        # player.link = base[0].a['href']
+        player.name = base[0].text.strip()
+        player.apparences = base[1].text.strip()
+        player.first_squad = base[2].text.strip()
+        player.substitute = base[3].text.strip()
+        player.minutes = base[4].text.strip()
+        player.yellow_cards = base[5].text.strip()
+        player.red_cards = base[6].text.strip()
+        player.goals = base[7].text.strip()
+        player.own_goals = base[8].text.strip()
+        player.penalties_scored = base[9].text.strip()
+        player.penalties_missed = base[10].text.strip()
+        
+        
+        squad[n] = player
+    return squad
 
 def get_player_season(player_id, season_id):
     link = 'http://www.90minut.pl/wystepy.php?id={}&id_sezon={}'.format(player_id, season_id)
